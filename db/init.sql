@@ -1,21 +1,54 @@
 CREATE EXTENSION IF NOT EXISTS vector;
 
--- Every uploaded file (contract or playbook)
+---------------------------------------------------------
+-- USER SERVICE
+---------------------------------------------------------
+
+CREATE TABLE tenants (
+    id              VARCHAR(64) PRIMARY KEY,
+    company_name    VARCHAR(255) NOT NULL,
+    plan            VARCHAR(20) NOT NULL DEFAULT 'FREE',
+    created_at      TIMESTAMP NOT NULL
+);
+
+CREATE TABLE users (
+    id              UUID PRIMARY KEY,
+    tenant_id       VARCHAR(64) NOT NULL,
+    email           VARCHAR(255) NOT NULL UNIQUE,
+    password_hash   VARCHAR(100) NOT NULL,
+    role            VARCHAR(20) NOT NULL DEFAULT 'MEMBER',
+    created_at      TIMESTAMP NOT NULL,
+
+    CONSTRAINT fk_user_tenant
+        FOREIGN KEY (tenant_id)
+        REFERENCES tenants(id)
+);
+
+CREATE INDEX idx_users_tenant
+ON users(tenant_id);
+
+---------------------------------------------------------
+-- DOCUMENTS
+---------------------------------------------------------
+
 CREATE TABLE documents (
     id           UUID PRIMARY KEY,
     tenant_id    VARCHAR(64)  NOT NULL,
     filename     VARCHAR(255) NOT NULL,
-    kind         VARCHAR(20)  NOT NULL,     -- CONTRACT or PLAYBOOK
+    kind         VARCHAR(20)  NOT NULL,
     chunk_count  INT          NOT NULL,
     created_at   TIMESTAMP    NOT NULL
 );
 
--- One row per analysis request
+---------------------------------------------------------
+-- ANALYSIS JOBS
+---------------------------------------------------------
+
 CREATE TABLE analysis_jobs (
     id                UUID PRIMARY KEY,
     tenant_id         VARCHAR(64) NOT NULL,
     document_id       UUID        NOT NULL,
-    status            VARCHAR(20) NOT NULL,   -- QUEUED, PROCESSING, COMPLETED, FAILED
+    status            VARCHAR(20) NOT NULL,
     processed_clauses INT         NOT NULL DEFAULT 0,
     total_clauses     INT         NOT NULL DEFAULT 0,
     overall_risk      VARCHAR(20),
@@ -25,7 +58,10 @@ CREATE TABLE analysis_jobs (
     updated_at        TIMESTAMP
 );
 
--- One row per analysed clause
+---------------------------------------------------------
+-- CLAUSE FINDINGS
+---------------------------------------------------------
+
 CREATE TABLE clause_findings (
     id                 UUID PRIMARY KEY,
     job_id             UUID        NOT NULL,
@@ -39,18 +75,27 @@ CREATE TABLE clause_findings (
     created_at         TIMESTAMP   NOT NULL
 );
 
--- Indexes we actually need
-CREATE INDEX idx_jobs_tenant     ON analysis_jobs (tenant_id);
-CREATE INDEX idx_findings_job    ON clause_findings (job_id);
+---------------------------------------------------------
+-- INDEXES
+---------------------------------------------------------
 
--- Spring AI creates this table itself, but we create it here so the
--- vector index exists from the start. 1536 = size of text-embedding-3-small
+CREATE INDEX idx_jobs_tenant
+ON analysis_jobs(tenant_id);
+
+CREATE INDEX idx_findings_job
+ON clause_findings(job_id);
+
+---------------------------------------------------------
+-- SPRING AI VECTOR STORE
+---------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS vector_store (
-    id        UUID PRIMARY KEY,
-    content   TEXT,
-    metadata  JSONB,
-    embedding VECTOR(1536)
+    id          UUID PRIMARY KEY,
+    content     TEXT,
+    metadata    JSONB,
+    embedding   VECTOR(1536)
 );
 
-CREATE INDEX idx_vector_embedding ON vector_store
-    USING HNSW (embedding vector_cosine_ops);
+CREATE INDEX idx_vector_embedding
+ON vector_store
+USING HNSW (embedding vector_cosine_ops);
