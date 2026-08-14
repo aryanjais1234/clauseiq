@@ -1,6 +1,7 @@
 package com.user_service.security;
 
 import com.user_service.entity.AppUser;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.UUID;
 
@@ -13,5 +14,5 @@ public interface JwtService {
 
     String extractRole(String token);
 
-    boolean isTokenValid(String token);
+    boolean isTokenValid(String token, UserDetails userDetails);
 }

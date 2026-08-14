@@ -1,4 +1,0 @@
-package com.user_service.security;
-
-public class JwtAuthenticationFilter {
-}

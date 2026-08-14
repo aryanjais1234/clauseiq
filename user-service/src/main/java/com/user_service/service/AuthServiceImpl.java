@@ -1,7 +1,7 @@
 package com.user_service.service;
 
-import com.user_service.dao.TenantRepository;
-import com.user_service.dao.UserRepository;
+import com.user_service.repository.TenantRepository;
+import com.user_service.repository.UserRepository;
 import com.user_service.dto.LoginRequest;
 import com.user_service.dto.LoginResponse;
 import com.user_service.dto.RegisterRequest;
