@@ -5,11 +5,13 @@ import com.user_service.dao.UserRepository;
 import com.user_service.dto.LoginRequest;
 import com.user_service.dto.LoginResponse;
 import com.user_service.dto.RegisterRequest;
+import com.user_service.dto.UserResponse;
 import com.user_service.entity.AppUser;
 import com.user_service.entity.Tenant;
 import com.user_service.enums.Plan;
 import com.user_service.enums.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +20,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final TenantRepository tenantRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public LoginResponse register(RegisterRequest registerRequest) {
@@ -33,7 +36,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        return null;
+        AppUser user = userRepository.findByEmail(loginRequest.getEmail());
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
+            throw new RuntimeException("Invalid email or password");
+        }
+
+        // JWT next step
+        String token = "TEMP_TOKEN";
+
+        return LoginResponse.builder()
+                .accessToken(token)
+                .user(UserResponse
+                        .builder()
+                        .userId(user.getId())
+                        .build())
+                .build();
     }
 
     private void validate(RegisterRequest request) {
@@ -60,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
         AppUser user = AppUser.builder()
                 .tenant(tenant)
                 .email(request.getEmail())
-                .passwordHash(request.getPassword())
+                .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ADMIN)
                 .build();
 

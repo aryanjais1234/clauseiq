@@ -2,11 +2,15 @@ package com.user_service.dto;
 
 import com.user_service.enums.Plan;
 import com.user_service.enums.Role;
-import lombok.Builder;
+import lombok.*;
 
 import java.util.UUID;
 
 @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse {
 
     private UUID userId;
