@@ -10,6 +10,7 @@ import com.user_service.entity.AppUser;
 import com.user_service.entity.Tenant;
 import com.user_service.enums.Plan;
 import com.user_service.enums.Role;
+import com.user_service.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final TenantRepository tenantRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Override
     public LoginResponse register(RegisterRequest registerRequest) {
@@ -43,13 +45,18 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // JWT next step
-        String token = "TEMP_TOKEN";
+        String token = jwtService.generateToken(user);
 
         return LoginResponse.builder()
                 .accessToken(token)
                 .user(UserResponse
                         .builder()
                         .userId(user.getId())
+                        .companyName(user.getTenant().getCompanyName())
+                        .email(user.getEmail())
+                        .role(user.getRole())
+                        .tenantId(user.getTenant().getId())
+                        .plan(user.getTenant().getPlan())
                         .build())
                 .build();
     }
