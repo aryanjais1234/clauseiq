@@ -5,6 +5,11 @@ spring:
   application:
     name: user-service
 
+  security:
+    user:
+      name: admin
+      password: admin123
+
   datasource:
     url: jdbc:postgresql://localhost:5456/clauseiq
     username: root
@@ -22,4 +27,4 @@ spring:
 
 logging:
   level:
-    org.springframework.security: INFO
+    org.springframework.security: TRACE

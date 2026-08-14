@@ -1,5 +1,14 @@
 package com.user_service.dto;
 
+
+import lombok.*;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Data
 public class LoginResponse {
 
     private String accessToken;
