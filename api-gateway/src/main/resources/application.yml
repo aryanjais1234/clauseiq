@@ -16,7 +16,7 @@ spring:
         webmvc:
           routes:
             - id: USER-SERVICE
-              uri: http://localhost:8082
+              uri: lb://user-service
               predicates:
                 - Path=/api/**
 
@@ -25,3 +25,14 @@ app:
     free: 10
     pro: 100
     enterprise: 1000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true

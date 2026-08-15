@@ -29,6 +29,18 @@ app:
     secret: 8f5b8d3c4a7e9f126ab73cd5e81a9b4f8d72a4e0f13c65b9e4d2f1c8a7b6d5e9
     expiration: 86400000
 
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
+
 logging:
   level:
     org.springframework.security: TRACE
