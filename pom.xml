@@ -31,9 +31,12 @@
 
         <module>common</module>
 
+        <module>eureka-server</module>
+
         <module>user-service</module>
 
         <module>api-gateway</module>
+
 
         <!--
                 <module>contract-service</module>
