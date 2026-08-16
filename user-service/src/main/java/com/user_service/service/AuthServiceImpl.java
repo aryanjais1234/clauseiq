@@ -93,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
                 .tenant(tenant)
                 .email(request.getEmail())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ADMIN)
+                .role(Role.valueOf(request.getRole().toUpperCase()))
                 .build();
 
         return userRepository.save(user);
