@@ -15,10 +15,17 @@ spring:
       server:
         webmvc:
           routes:
+            #user-service
             - id: USER-SERVICE
               uri: lb://user-service
               predicates:
-                - Path=/api/**
+                - Path=/api/v1/auth/**
+
+            #ingestion-service
+            - id: INGESTION-SERVICE
+              uri: lb://ingestion-service
+              predicates:
+                - Path=/api/v1/ingestion/**
 
 app:
   rate-limit:

@@ -12,7 +12,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll());
+                        .requestMatchers("/api/v1/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
+                );
         return http.build();
     }
 }
