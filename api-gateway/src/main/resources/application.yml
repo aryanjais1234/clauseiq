@@ -15,13 +15,18 @@ spring:
       server:
         webmvc:
           routes:
-            #user-service
+
+            # ==========================
+            # USER SERVICE
+            # ==========================
             - id: USER-SERVICE
               uri: lb://user-service
               predicates:
                 - Path=/api/v1/auth/**
 
-            #ingestion-service
+            # ==========================
+            # INGESTION SERVICE
+            # ==========================
             - id: INGESTION-SERVICE
               uri: lb://ingestion-service
               predicates:
@@ -32,6 +37,10 @@ app:
     free: 10
     pro: 100
     enterprise: 1000
+
+  jwt:
+    secret: 8f5b8d3c4a7e9f126ab73cd5e81a9b4f8d72a4e0f13c65b9e4d2f1c8a7b6d5e9
+    expiration: 86400000
 
 eureka:
   client:

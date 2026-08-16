@@ -56,7 +56,8 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String extractRole(String token) {
-        return null;
+        return extractAllClaims(token)
+                .get("role", String.class);
     }
 
     @Override
