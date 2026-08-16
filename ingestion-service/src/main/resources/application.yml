@@ -11,6 +11,19 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
 
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      embedding:
+        options:
+            model: text-embedding-3-small
+
+  vectorstore:
+    pgvector:
+      initialize-schema: false
+      dimensions: 1536
+      distance-type: COSINE_DISTANCE
+
   jpa:
       hibernate:
           ddl-auto: validate
@@ -31,4 +44,11 @@ eureka:
 
   instance:
     prefer-ip-address: true
+
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    com.clauseiq.ingestion: DEBUG
 
