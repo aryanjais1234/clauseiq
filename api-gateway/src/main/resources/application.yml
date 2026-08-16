@@ -19,7 +19,7 @@ spring:
             # ==========================
             # USER SERVICE
             # ==========================
-            - id: USER-SERVICE
+            - id: user-service
               uri: lb://user-service
               predicates:
                 - Path=/api/v1/auth/**
@@ -27,26 +27,41 @@ spring:
             # ==========================
             # INGESTION SERVICE
             # ==========================
-            - id: INGESTION-SERVICE
+            - id: ingestion-service
               uri: lb://ingestion-service
               predicates:
                 - Path=/api/v1/ingestion/**
 
+            # ==========================
+            # CONTRACT SERVICE
+            # ==========================
+            # - id: contract-service
+            #   uri: lb://contract-service
+            #   predicates:
+            #     - Path=/api/v1/contracts/**
+
+            # ==========================
+            # ANALYSIS SERVICE
+            # ==========================
+            # - id: analysis-service
+            #   uri: lb://analysis-service
+            #   predicates:
+            #     - Path=/api/v1/analysis/**
+
 app:
+  jwt:
+    secret: ${JWT_SECRET:8f5b8d3c4a7e9f126ab73cd5e81a9b4f8d72a4e0f13c65b9e4d2f1c8a7b6d5e9}
+    expiration: 86400000
+
   rate-limit:
     free: 10
     pro: 100
     enterprise: 1000
 
-  jwt:
-    secret: 8f5b8d3c4a7e9f126ab73cd5e81a9b4f8d72a4e0f13c65b9e4d2f1c8a7b6d5e9
-    expiration: 86400000
-
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-
     register-with-eureka: true
     fetch-registry: true
 
