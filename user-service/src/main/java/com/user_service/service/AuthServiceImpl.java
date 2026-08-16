@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
 
         validate(registerRequest);
 
-        Tenant tenant = createTenant(registerRequest);
+        Tenant tenant = getOrCreateTenant(registerRequest);
 
         AppUser user = createUser(registerRequest, tenant);
 
@@ -67,6 +67,13 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Email already exists");
         }
 
+    }
+
+    private Tenant getOrCreateTenant(RegisterRequest request) {
+
+        return tenantRepository
+                .findByCompanyName(request.getCompanyName())
+                .orElseGet(() -> createTenant(request));
     }
 
     private Tenant createTenant(RegisterRequest request) {

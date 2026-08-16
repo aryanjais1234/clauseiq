@@ -6,7 +6,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 CREATE TABLE tenants (
     id              UUID PRIMARY KEY,
-    company_name    VARCHAR(255) NOT NULL,
+    company_name    VARCHAR(255) NOT NULL UNIQUE,
     plan            VARCHAR(20) NOT NULL DEFAULT 'FREE',
     created_at      TIMESTAMP NOT NULL
 );
