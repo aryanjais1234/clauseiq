@@ -82,6 +82,16 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+
+			<groupId>com.clauseiq</groupId>
+
+			<artifactId>common</artifactId>
+
+			<version>${project.version}</version>
+
+		</dependency>
+
 	</dependencies>
 
 	<build>
